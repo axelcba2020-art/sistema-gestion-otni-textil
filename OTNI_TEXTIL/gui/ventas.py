@@ -168,7 +168,7 @@ class VentasFrame(ttk.Frame):
                     venta["cliente"],
                     venta["producto"],
                     venta["cantidad"],
-                    f"S/. {venta['total']:,.2f}",
+                    f"$ {venta['total']:,.2f}",
                 ),
             )
 

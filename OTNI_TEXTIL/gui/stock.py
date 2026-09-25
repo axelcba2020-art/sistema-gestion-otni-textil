@@ -164,7 +164,7 @@ class StockFrame(ttk.Frame):
                     producto.get("nombre", ""),
                     producto.get("categoria", ""),
                     producto.get("talle", ""),
-                    f"S/. {precio:,.2f}",
+                    f"$ {precio:,.2f}",
                     stock,
                     "",
                 )
