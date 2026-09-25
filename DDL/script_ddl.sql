@@ -24,7 +24,10 @@ CREATE TABLE Cliente (
     Direccion VARCHAR(150),
 
     CONSTRAINT PK_Cliente
-        PRIMARY KEY (ID_Cliente)
+        PRIMARY KEY (ID_Cliente),
+
+    CONSTRAINT UQ_Cliente_DNI
+        UNIQUE (DNI)
 );
 
 
@@ -41,7 +44,10 @@ CREATE TABLE Empleado (
     Rol VARCHAR(30) NOT NULL,
 
     CONSTRAINT PK_Empleado
-        PRIMARY KEY (ID_Empleado)
+        PRIMARY KEY (ID_Empleado),
+
+    CONSTRAINT UQ_Empleado_Usuario
+        UNIQUE (Usuario)
 );
 
 
@@ -59,7 +65,13 @@ CREATE TABLE Producto (
     Descripcion VARCHAR(255),
 
     CONSTRAINT PK_Producto
-        PRIMARY KEY (ID_Producto)
+        PRIMARY KEY (ID_Producto),
+
+    CONSTRAINT CK_Producto_Precio
+        CHECK (Precio >= 0),
+
+    CONSTRAINT CK_Producto_Stock
+        CHECK (Stock >= 0)
 );
 
 
@@ -76,6 +88,9 @@ CREATE TABLE Venta (
 
     CONSTRAINT PK_Venta
         PRIMARY KEY (ID_Venta),
+
+    CONSTRAINT CK_Venta_Total
+        CHECK (Total >= 0),
 
     CONSTRAINT FK_Venta_Cliente
         FOREIGN KEY (ID_Cliente)
@@ -102,6 +117,15 @@ CREATE TABLE Detalle_Venta (
     CONSTRAINT PK_Detalle_Venta
         PRIMARY KEY (ID_Detalle),
 
+    CONSTRAINT CK_Detalle_Cantidad
+        CHECK (Cantidad > 0),
+
+    CONSTRAINT CK_Detalle_Precio
+        CHECK (Precio_Unitario >= 0),
+
+    CONSTRAINT CK_Detalle_Subtotal
+        CHECK (Subtotal >= 0),
+
     CONSTRAINT FK_Detalle_Venta
         FOREIGN KEY (ID_Venta)
         REFERENCES Venta(ID_Venta),
@@ -110,3 +134,20 @@ CREATE TABLE Detalle_Venta (
         FOREIGN KEY (ID_Producto)
         REFERENCES Producto(ID_Producto)
 );
+
+
+-- ============================================================
+-- REGLAS DE CONSISTENCIA DE IMPORTES
+-- ============================================================
+--
+-- Subtotal = Cantidad * Precio_Unitario
+--
+-- Total = suma de los Subtotal correspondientes a una venta.
+--
+-- Estos valores son calculados por la aplicación antes de
+-- almacenarse. Las restricciones CHECK de la base de datos
+-- impiden almacenar valores negativos.
+--
+-- De esta manera se mantiene la coherencia de los importes
+-- almacenados en TOTAL y SUBTOTAL.
+-- ============================================================
