@@ -16,7 +16,7 @@ El modelo está compuesto por:
 2. Empleado
 3. Producto
 4. Venta
-5. Detalle_Venta
+5. Detalle_venta
 
 ## Relaciones principales
 
