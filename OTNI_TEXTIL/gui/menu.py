@@ -148,7 +148,12 @@ class MenuFrame(ttk.Frame):
         self.boton_admin.grid(row=0, column=1, sticky="e", pady=10)
         if self.boton_atras is not None:
             self.boton_atras.grid_remove()
-        InicioFrame(self.contenido).pack(fill="both", expand=True)
+        InicioFrame(
+            self.contenido,
+            self.productos,
+            self.clientes,
+            self.ventas,
+        ).pack(fill="both", expand=True)
 
     def mostrar_stock(self):
         self.mostrar_pantalla(

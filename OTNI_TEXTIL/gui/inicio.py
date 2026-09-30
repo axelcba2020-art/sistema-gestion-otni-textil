@@ -1,8 +1,12 @@
 from tkinter import ttk
 
 class InicioFrame(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, productos=None, clientes=None, ventas=None ):
         super().__init__(master)
+
+        self.productos = productos if productos is not None else []
+        self.clientes = clientes if clientes is not None else []
+        self.ventas = ventas if ventas is not None else []
 
         self.pack(fill="both", expand=True)
         self._crear_tarjetas()
@@ -14,11 +18,16 @@ class InicioFrame(ttk.Frame):
         tarjetas = ttk.Frame(centro)
         tarjetas.pack(fill="both", expand=True)
 
+        stock_bajo = sum(
+            int(producto.get("stock", 0)) < 10
+            for producto in self.productos
+        )
+
         for columna, (titulo, valor) in enumerate((
-            ("PRODUCTOS", 0),
-            ("CLIENTES", 0),
-            ("VENTAS", 0),
-            ("STOCK BAJO", 0),
+            ("PRODUCTOS", len(self.productos)),
+            ("CLIENTES", len(self.clientes)),
+            ("VENTAS", len(self.ventas)),
+            ("STOCK BAJO", stock_bajo),
         )):
             tarjeta = ttk.LabelFrame(
                 tarjetas,
