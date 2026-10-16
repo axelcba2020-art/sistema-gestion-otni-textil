@@ -30,3 +30,8 @@ El modelo está compuesto por:
 - Modelo E-R
 - SQL
 - MySQL/MariaDB
+- ##  Instalación y Ejecución
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/axelcba2020-art/sistema-gestion-otni-textil.git](https://github.com/axelcba2020-art/sistema-gestion-otni-textil.git)
