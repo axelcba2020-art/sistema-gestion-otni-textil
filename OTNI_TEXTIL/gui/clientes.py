@@ -225,7 +225,10 @@ class ClientesFrame(ttk.Frame):
                 parent=ventana,
             )
             return
-
+            es_valido, mensaje = validar_cliente(datos["nombre"], datos["apellido"], datos["dni"])
+            if not es_valido:
+                messagebox.showwarning("datos invalidos" , mensaje, parent=ventana)
+                return
 
         if cliente_original is None:
             datos["fecha_alta"] = date.today().isoformat()
