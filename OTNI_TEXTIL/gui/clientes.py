@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import date
-from validador_otni import validar_dni, validar_telefono, validar_email
+from validaciones.validador_otni import validar_cliente
 
 class ClientesFrame(ttk.Frame):
     def __init__(self, master, clientes=None):
