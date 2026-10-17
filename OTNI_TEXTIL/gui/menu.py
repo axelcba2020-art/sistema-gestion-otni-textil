@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 
@@ -8,7 +9,6 @@ from gui.ventas import VentasFrame
 from gui.reportes import ReportesFrame
 from gui.empleados import EmpleadosFrame
 
-from assets.style import aplicar_estilos
 
 class MenuFrame(ttk.Frame):
     def __init__(
@@ -20,19 +20,24 @@ class MenuFrame(ttk.Frame):
         clientes=None,
         productos=None,
         ventas=None,
+        usuario_actual=None,
     ):
         super().__init__(master)
+
         self.ingresar = _ingresar
         self.cerrar_sesion_callback = _cerrar_sesion
         self.usuarios = usuarios if usuarios is not None else []
         self.clientes = clientes if clientes is not None else []
         self.productos = productos if productos is not None else []
         self.ventas = ventas if ventas is not None else []
+        self.usuario_actual = usuario_actual or {}
+
         self.root = self.winfo_toplevel()
         self.titulo = None
         self.subtitulo = None
         self.boton_admin = None
         self.boton_atras = None
+
         self.pack(fill="both", expand=True, padx=10, pady=10)
 
         self._crear_header()
@@ -43,7 +48,13 @@ class MenuFrame(ttk.Frame):
         self.panel.rowconfigure(0, weight=1)
 
         self.sidebar = ttk.Frame(self.panel)
-        self.sidebar.grid(row=0, column=0, sticky="ns", padx=(0, 10), pady=(10, 0))
+        self.sidebar.grid(
+            row=0,
+            column=0,
+            sticky="ns",
+            padx=(0, 10),
+            pady=(10, 0)
+        )
 
         self.botones = ttk.Frame(self.sidebar)
         self.botones.pack(anchor="nw", fill="y")
@@ -53,6 +64,13 @@ class MenuFrame(ttk.Frame):
 
         self.crear_botones()
         self.mostrar_inicio()
+
+    def _es_administrador(self):
+        rol = str(
+            self.usuario_actual.get("rol", "")
+        ).strip().casefold()
+
+        return rol in ("administrador", "admin")
 
     def _crear_header(self):
         inner = ttk.Frame(self)
@@ -66,28 +84,55 @@ class MenuFrame(ttk.Frame):
             command=self._cerrar_sesion
         )
 
+        nombre = self.usuario_actual.get("nombre", "")
+        apellido = self.usuario_actual.get("apellido", "")
+        usuario = self.usuario_actual.get("usuario", "")
+
+        texto_usuario = (
+            f"{nombre} {apellido}".strip()
+            or usuario
+            or "Usuario"
+        )
+
         self.boton_admin = ttk.Menubutton(
             inner,
-            text="Admin 👤",
+            text=f"{texto_usuario} 👤",
             cursor="hand2",
             menu=menu_admin,
             direction="below"
         )
-        self.boton_admin.grid(row=0, column=1, sticky="e", pady=10)
+
+        self.boton_admin.grid(
+            row=0,
+            column=1,
+            sticky="e",
+            pady=10
+        )
 
         self.titulo = ttk.Label(
             inner,
             text="INDUMENTARIA OTNI TEXTIL",
             font=("Arial", 11, "bold")
         )
-        self.titulo.grid(row=0, column=0, sticky="w", padx=10)
+
+        self.titulo.grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=10
+        )
 
         self.subtitulo = ttk.Label(
             self,
             text="🏠 INICIO",
             font=("Arial", 10, "bold")
         )
-        self.subtitulo.pack(anchor="w", padx=10, pady=(0, 5))
+
+        self.subtitulo.pack(
+            anchor="w",
+            padx=10,
+            pady=(0, 5)
+        )
 
     def _cerrar_sesion(self):
         if self.cerrar_sesion_callback is not None:
@@ -101,8 +146,13 @@ class MenuFrame(ttk.Frame):
             ("👥 CLIENTES", self.mostrar_clientes),
             ("💰 VENTAS", self.mostrar_ventas),
             ("📃 REPORTES", self.mostrar_reportes),
-            ("👤 USUARIOS", self.mostrar_usuarios),
         ]
+
+        # Solo el administrador puede gestionar empleados.
+        if self._es_administrador():
+            botones.append(
+                ("👤 USUARIOS", self.mostrar_usuarios)
+            )
 
         for texto, comando in botones:
             ttk.Button(
@@ -111,13 +161,17 @@ class MenuFrame(ttk.Frame):
                 cursor="hand2",
                 width=18,
                 command=comando
-            ).pack(anchor="w", padx=10, pady=8)
+            ).pack(
+                anchor="w",
+                padx=10,
+                pady=8
+            )
 
     def limpiar_contenido(self):
         for widget in self.contenido.winfo_children():
             widget.destroy()
 
-    def mostrar_pantalla(self, titulo, frame):
+    def mostrar_pantalla(self, titulo, crear_frame):
         self.limpiar_contenido()
         self.sidebar.grid_remove()
         self.subtitulo.configure(text=titulo)
@@ -130,57 +184,126 @@ class MenuFrame(ttk.Frame):
                 cursor="hand2",
                 command=self.volver_menu
             )
-        self.boton_atras.grid(row=0, column=1, sticky="e", pady=10)
-        frame(self.contenido).pack(fill="both", expand=True)
+
+        self.boton_atras.grid(
+            row=0,
+            column=1,
+            sticky="e",
+            pady=10
+        )
+
+        crear_frame(self.contenido).pack(
+            fill="both",
+            expand=True
+        )
 
     def volver_menu(self):
         self.limpiar_contenido()
+
         if self.boton_atras is not None:
             self.boton_atras.grid_remove()
-        self.boton_admin.grid(row=0, column=1, sticky="e", pady=10)
-        self.sidebar.grid(row=0, column=0, sticky="ns", padx=(0, 10), pady=(10, 0))
+
+        self.boton_admin.grid(
+            row=0,
+            column=1,
+            sticky="e",
+            pady=10
+        )
+
+        self.sidebar.grid(
+            row=0,
+            column=0,
+            sticky="ns",
+            padx=(0, 10),
+            pady=(10, 0)
+        )
+
         self.mostrar_inicio()
 
     def mostrar_inicio(self):
         self.limpiar_contenido()
-        self.sidebar.grid(row=0, column=0, sticky="ns", padx=(0, 10), pady=(10, 0))
+
+        self.sidebar.grid(
+            row=0,
+            column=0,
+            sticky="ns",
+            padx=(0, 10),
+            pady=(10, 0)
+        )
+
         self.subtitulo.configure(text="🏠 INICIO")
-        self.boton_admin.grid(row=0, column=1, sticky="e", pady=10)
+
+        self.boton_admin.grid(
+            row=0,
+            column=1,
+            sticky="e",
+            pady=10
+        )
+
         if self.boton_atras is not None:
             self.boton_atras.grid_remove()
+
         InicioFrame(
             self.contenido,
             self.productos,
             self.clientes,
             self.ventas,
-        ).pack(fill="both", expand=True)
+        )
 
     def mostrar_stock(self):
         self.mostrar_pantalla(
             "📦 STOCK",
-            lambda contenido: StockFrame(contenido, self.productos)
+            lambda contenido: StockFrame(
+                contenido,
+                self.productos
+            )
         )
 
     def mostrar_clientes(self):
         self.mostrar_pantalla(
             "👥 CLIENTES",
-            lambda contenido: ClientesFrame(contenido, self.clientes),
+            lambda contenido: ClientesFrame(
+                contenido,
+                self.clientes
+            )
         )
 
     def mostrar_ventas(self):
         self.mostrar_pantalla(
             "💰 VENTAS",
-            lambda contenido: VentasFrame(contenido, self.clientes, self.productos, self.ventas),
+            lambda contenido: VentasFrame(
+                contenido,
+                self.clientes,
+                self.productos,
+                self.ventas,
+                usuario_actual=self.usuario_actual
+            )
         )
 
     def mostrar_reportes(self):
         self.mostrar_pantalla(
             "📃 REPORTES",
-            lambda contenido: ReportesFrame(contenido, self.ventas, self.clientes),
+            lambda contenido: ReportesFrame(
+                contenido,
+                self.ventas,
+                self.clientes
+            )
         )
 
     def mostrar_usuarios(self):
+        # Verificación adicional de permisos.
+        if not self._es_administrador():
+            messagebox.showerror(
+                "Acceso denegado",
+                "No tenés permisos para administrar empleados."
+            )
+            return
+
         self.mostrar_pantalla(
             "👤 USUARIOS",
-            lambda contenido: EmpleadosFrame(contenido, self.usuarios),
+            lambda contenido: EmpleadosFrame(
+                contenido,
+                self.usuarios,
+                usuario_actual=self.usuario_actual
+            )
         )
