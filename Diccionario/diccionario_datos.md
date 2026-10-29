@@ -15,7 +15,7 @@ El diccionario describe cada atributo de las entidades del modelo, indicando su 
 | `Apellido`   | VARCHAR(50)  | —     | Sí          | No    | No puede estar vacío                 | Apellido del cliente.               |
 | `DNI`        | VARCHAR(20)  | —     | Sí          | Sí    | No puede repetirse                   | Documento de identidad del cliente. |
 | `Telefono`   | VARCHAR(30)  | —     | No          | No    | —                                    | Número telefónico de contacto.      |
-| `Email`      | VARCHAR(100) | —     | No          | No    | Formato de correo electrónico válido | Correo electrónico del cliente.     |
+| `Email`      | VARCHAR(255) | —     | No          | No    | Formato de correo electrónico válido | Correo electrónico del cliente.     |
 | `Direccion`  | VARCHAR(150) | —     | No          | No    | —                                    | Dirección del cliente.              |
 
 ---
