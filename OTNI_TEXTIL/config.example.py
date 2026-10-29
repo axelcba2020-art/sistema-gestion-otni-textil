@@ -2,7 +2,7 @@
 
 DB_CONFIG = {
       "host": "localhost",
-      "user": "root",
-      "password": "tu_contra",
+      "user": "admi",
+      "password": "admi123",
       "database": "otni_textil"
 }
