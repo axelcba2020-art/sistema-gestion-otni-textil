@@ -9,7 +9,7 @@ CREATE TABLE cliente (
   nombre VARCHAR(100) NOT NULL,
   cuit_dni VARCHAR(11) NOT NULL UNIQUE,
   telefono VARCHAR(20),
-  direccion VARCHAR(150)
+  direccion VARCHAR(255)
 );
 
 CREATE TABLE producto (
@@ -17,7 +17,7 @@ CREATE TABLE producto (
   codigo VARCHAR(20) NOT NULL UNIQUE,
   descripcion VARCHAR(150) NOT NULL,
   stock INT NOT NULL DEFAULT 0,
-  precio_unitario DECIMAL(10,2) NOT NULL
+  precio_unitario FLOAT(10,2) NOT NULL
 );
 
 CREATE TABLE empleado (
