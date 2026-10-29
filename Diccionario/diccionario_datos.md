@@ -41,7 +41,7 @@ El diccionario describe cada atributo de las entidades del modelo, indicando su 
 | `Nombre`      | VARCHAR(50)   | —     | Sí          | No    | No puede estar vacío       | Nombre del producto.                        |
 | `Categoria`   | VARCHAR(50)   | —     | Sí          | No    | No puede estar vacía       | Categoría a la que pertenece el producto.   |
 | `Talle`       | VARCHAR(10)   | —     | No          | No    | —                          | Talle o medida del producto.                |
-| `Precio`      | DECIMAL(10,2) | —     | Sí          | No    | Debe ser mayor o igual a 0 | Precio de venta del producto.               |
+| `Precio`      | FLOAT(10,2)   | —     | Sí          | No    | Debe ser mayor o igual a 0 | Precio de venta del producto.               |
 | `Stock`       | INT           | —     | Sí          | No    | Debe ser mayor o igual a 0 | Cantidad de unidades disponibles.           |
 | `Descripcion` | VARCHAR(255)  | —     | No          | No    | —                          | Descripción y características del producto. |
 
@@ -53,7 +53,7 @@ El diccionario describe cada atributo de las entidades del modelo, indicando su 
 | ------------- | ------------- | ----- | ----------- | ----- | -------------------------------------------------------------------- | --------------------------------------------- |
 | `ID_Venta`    | INT           | PK    | Sí          | Sí    | Autoincremental                                                      | Identificador único de la venta.              |
 | `Fecha`       | DATE          | —     | Sí          | No    | Debe ser una fecha válida                                            | Fecha en la que se realizó la venta.          |
-| `Total`       | DECIMAL(10,2) | —     | Sí          | No    | Debe ser mayor o igual a 0 y coincidir con la suma de los subtotales | Importe total correspondiente a la venta.     |
+| `Total`       | FLOAT(10,2)   | —     | Sí          | No    | Debe ser mayor o igual a 0 y coincidir con la suma de los subtotales | Importe total correspondiente a la venta.     |
 | `ID_Cliente`  | INT           | FK    | Sí          | No    | Debe corresponder a un cliente existente                             | Identifica al cliente asociado a la venta.    |
 | `ID_Empleado` | INT           | FK    | Sí          | No    | Debe corresponder a un empleado existente                            | Identifica al empleado que registró la venta. |
 
@@ -70,8 +70,8 @@ El diccionario describe cada atributo de las entidades del modelo, indicando su 
 | ----------------- | ------------- | ----- | ----------- | ----- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
 | `ID_Detalle`      | INT           | PK    | Sí          | Sí    | Autoincremental                                                       | Identificador único del detalle de venta.                       |
 | `Cantidad`        | INT           | —     | Sí          | No    | Debe ser mayor que 0                                                  | Cantidad de unidades del producto vendido.                      |
-| `Precio_Unitario` | DECIMAL(10,2) | —     | Sí          | No    | Debe ser mayor o igual a 0                                            | Precio del producto al momento de realizar la venta.            |
-| `Subtotal`        | DECIMAL(10,2) | —     | Sí          | No    | Debe ser mayor o igual a 0 y coincidir con Cantidad × Precio_Unitario | Importe correspondiente a la cantidad de unidades del producto. |
+| `Precio_Unitario` | FLOAT(10,2)   | —     | Sí          | No    | Debe ser mayor o igual a 0                                            | Precio del producto al momento de realizar la venta.            |
+| `Subtotal`        | FLOAT(10,2)   | —     | Sí          | No    | Debe ser mayor o igual a 0 y coincidir con Cantidad × Precio_Unitario | Importe correspondiente a la cantidad de unidades del producto. |
 | `ID_Venta`        | INT           | FK    | Sí          | No    | Debe corresponder a una venta existente                               | Identifica la venta a la que pertenece el detalle.              |
 | `ID_Producto`     | INT           | FK    | Sí          | No    | Debe corresponder a un producto existente                             | Identifica el producto incluido en el detalle.                  |
 
@@ -105,7 +105,7 @@ De esta manera se evita almacenar importes negativos y se mantiene la coherencia
 * **INT:** Número entero.
 * **VARCHAR:** Cadena de caracteres de longitud variable.
 * **DATE:** Fecha.
-* **DECIMAL(10,2):** Número decimal con hasta 10 dígitos en total y 2 posiciones decimales.
+* **FLOAT(10,2):** Número decimal con hasta 10 dígitos en total y 2 posiciones decimales.
 * **Obligatorio:** El campo debe contener un valor y no puede quedar vacío.
 * **Único:** El valor no puede repetirse entre los registros de la tabla.
 * **Validación:** Regla que determina qué valores son aceptados para un atributo.
